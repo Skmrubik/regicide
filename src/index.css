@@ -30,6 +30,7 @@
 .container-cartas-jugadas{
   height: 30vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -38,6 +39,11 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+}
+
+.puntos-jugador {
+  color: white;
+  font-weight: 500;
 }
 .container-button-echar-cartas{
   height: 100%;

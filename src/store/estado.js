@@ -15,14 +15,24 @@ export const useEstado = create((set, get) => ({
     mano: [],
     cartasSeleccionadas: [],
     cartasJugadas: [],
+    vidaMonstruo: 0,
+    ataqueJugador: 0,
+    defensaJugador: 0,
 
     setEstadoPrincipal: (estadoPrincipal) => set({ estadoPrincipal}),
     setEstadoTurnoJugador: (estadoTurnoJugador) => set({ estadoTurnoJugador}),
     setMazo: (mazo) => set({ mazo}),
+    setVidaMonstruo: (vidaMonstruo) => set({vidaMonstruo}),
+    setAtaqueJugador: (ataqueJugador) => set({ataqueJugador}),
+    setDefensaJugador: (defensaJugador) => set({defensaJugador}),
     setMonstruos: (monstruos) => set({ monstruos}),
     shuffleMazo: () => set((state) => {
         shuffleArray(state.mazo)
         return {mazo: state.mazo}
+    }),
+    shuffleMazoDescartes: () => set((state) => {
+        shuffleArray(state.mazoDescartes)
+        return {mazoDescartes: state.mazoDescartes}
     }),
     shuffleMonstruos: () => set((state) => {
         let js = state.monstruos.slice(0, 4)
@@ -48,5 +58,7 @@ export const useEstado = create((set, get) => ({
     addCartaJugada: (carta) => set((state) => ({
         cartasJugadas: [...state.cartasJugadas, carta]
     })),
-
+    addCartaFinalMazo: (carta) => set((state) => ({
+        mazo: [...state.mazo, carta]
+    })),
 }))
