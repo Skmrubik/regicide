@@ -7,27 +7,46 @@ function shuffleArray(inputArray) {
 }
 
 export const useEstado = create((set, get) => ({ 
+    estadoPrincipal: 0,
+    estadoTurnoJugador: 0,
     mazo: cartasMazo,
     mazoDescartes: [],
     monstruos: cartasMonstruos,
     mano: [],
+    cartasSeleccionadas: [],
+    cartasJugadas: [],
 
+    setEstadoPrincipal: (estadoPrincipal) => set({ estadoPrincipal}),
+    setEstadoTurnoJugador: (estadoTurnoJugador) => set({ estadoTurnoJugador}),
     setMazo: (mazo) => set({ mazo}),
     setMonstruos: (monstruos) => set({ monstruos}),
-    shuffleMazo: (mazo) => {
-        shuffleArray(mazo)
-    },
-    shuffleMonstruos: (monstruos) => {
-        let js = monstruos.slice(0, 4);
-        let qs = monstruos.slice(4, 8);
-        let ks = monstruos.slice(8, 12);
+    shuffleMazo: () => set((state) => {
+        shuffleArray(state.mazo)
+        return {mazo: state.mazo}
+    }),
+    shuffleMonstruos: () => set((state) => {
+        let js = state.monstruos.slice(0, 4)
+        let qs = state.monstruos.slice(4, 8);
+        let ks = state.monstruos.slice(8, 12);
         shuffleArray(js);
         shuffleArray(qs);
         shuffleArray(ks);
-        set({ monstruos: [...ks,...qs,...js] })
-    },
-    addCartaMano: (mano, carta) => {
-        mano.push(carta);
-        set({mano})
-    }
+        return {monstruos: [...ks,...qs,...js] }
+    }),
+    addCartaMano: (carta) => set((state) => ({
+        mano: [...state.mano, carta]
+    })),
+    addCartaSeleccionada: (carta) => set((state) => ({
+        cartasSeleccionadas: [...state.cartasSeleccionadas, carta]
+    })),
+    removeCartaSeleccionada: (cartaEliminar) => set((state) => ({
+        cartasSeleccionadas: state.cartasSeleccionadas.filter(carta => carta.image != cartaEliminar.image)
+    })),
+    removeCartaMano: (cartaEliminar) => set((state) => ({
+        mano: state.mano.filter(carta => carta.image != cartaEliminar.image)
+    })),
+    addCartaJugada: (carta) => set((state) => ({
+        cartasJugadas: [...state.cartasJugadas, carta]
+    })),
+
 }))

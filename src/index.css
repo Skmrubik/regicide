@@ -4,7 +4,7 @@
 }
 .card {
   width: 80px;
-  height: auto;
+  height: 125px;
   padding: 0px;
 }
 
@@ -29,6 +29,9 @@
 
 .container-cartas-jugadas{
   height: 30vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .container-mano{
   height: 30vh;
