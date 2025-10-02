@@ -1,0 +1,106 @@
+:root {
+  background-color: darkgreen;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.card {
+  width: 80px;
+  height: auto;
+  padding: 0px;
+}
+
+.card-empty {
+  width: 78px;
+  height: 123px;
+  background-color: darkgreen;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+.imagen-vida{
+  width: 40px;
+  margin: 10px;
+}
+
+.container-mazos{
+  height: 38vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.container-cartas-jugadas{
+  height: 30vh;
+}
+.container-mano{
+  height: 30vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.container-button-echar-cartas{
+  height: 100%;
+  width: 35%;
+  display: flex;
+  padding-top: 10vh;
+  justify-content: center;
+}
+
+.cartas-mano{
+  padding-top: 50px;
+  width: 700px;
+}
+.container-button-echar-cartas{
+  display: flex;
+  justify-content: center;
+}
+.button-echar-cartas {
+  height: 30px;
+  width: 100px;
+}
+.container-mazo-monstruos{
+  display: flex;
+  width: 30%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: white;
+  font-weight: 500;
+}
+.container-mazo-principal{
+  display: flex;
+  width: 25%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  padding-right: 10px;
+  height: 100%;
+  color: white;
+  font-weight: 500;
+}
+.container-mazo-descartes {
+  display: flex;
+  width: 25%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding-left: 10px;
+  height: 100%;
+  color: white;
+  font-weight: 500;
+}
+.container-vidas {
+  display: flex;
+  width: 20%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-right: 50px;
+  height: 100%;
+  color: white;
+  font-weight: 500;
+}
+
+.vidas{
+  display: flex;
+  flex-direction: row;
+}
