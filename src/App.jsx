@@ -59,6 +59,12 @@ function App() {
       paso1();
     }
   },[cartasJugadas])
+
+  useLayoutEffect(() => {
+    if(estadoPrincipal==1 && estadoTurnoJugador == 2) {
+      console.log(mano)
+    }
+  },[vidaMonstruo])
   //Paso 1 Turno
   //Ataque al enemigo y aplicar poderes
   function paso1(){
@@ -121,12 +127,12 @@ function App() {
     setVidaMonstruo(vidaRestanteMonstruo)
 
     if(cartasPorPoder[0]>0){
-      if(mazoDescartes.length>cartasCoger){
+      if(mazoDescartes.length>cartasDescarte){
         shuffleMazoDescartes();
-        for(let i=0; i<cartasCoger; i++){
+        for(let i=0; i<cartasDescarte; i++){
           addCartaFinalMazo(mazoDescartes.pop())
         }
-      } else if(mazoDescartes.length>0 &&mazoDescartes.length<=cartasCoger){
+      } else if(mazoDescartes.length>0 &&mazoDescartes.length<=cartasDescarte){
         shuffleMazoDescartes();
         for(let i=0; i<mazoDescartes.length; i++){
           addCartaFinalMazo(mazoDescartes.pop())
@@ -134,13 +140,16 @@ function App() {
       } 
     } 
     if (cartasPorPoder[1]>0){
+      console.log("Añadir a mano")
       const cartasFaltanMano = 8-mano.length;
-      if (cartasDescarte <= cartasFaltanMano) {
-        for (let i= 0; i<cartasDescarte; i++) {
+      if (cartasCoger <= cartasFaltanMano) {
+        for (let i= 0; i<cartasCoger; i++) {
+          console.log("Añadir una carta")
           aniadirCartaMano(mazo.shift())
         }
       } else {
         for (let i= 0; i<cartasFaltanMano; i++) {
+          console.log("Añadir una carta")
           aniadirCartaMano(mazo.shift())
         }
       }
