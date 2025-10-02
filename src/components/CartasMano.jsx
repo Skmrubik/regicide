@@ -6,6 +6,7 @@ function CartasMano({obj, zindex}) {
   const [elegida, setElegida] = useState(0)
   const addCartaSeleccionada = useEstado((state) => state.addCartaSeleccionada);
   const removeCartaSeleccionada = useEstado((state) => state.removeCartaSeleccionada);
+  const cartasSeleccionadas = useEstado((state) => state.cartasSeleccionadas);
   const estado = useEstado();
   const estadoTurnoJugador = useEstado((state) => state.estadoTurnoJugador);
 
@@ -19,8 +20,36 @@ function CartasMano({obj, zindex}) {
 
   const elegirCarta =() => {
     if(elegida == 0) {
-        setElegida(20)
-        addCartaSeleccionada(obj);
+        let sumaValores = 0;
+        for (const carta of cartasSeleccionadas) {
+          sumaValores +=carta.valorAtaque;
+        }
+
+        const hayUnAs = cartasSeleccionadas.some(carta => {
+          return carta.valorAtaque === 1;
+        })
+        const hayUnaIgual = cartasSeleccionadas.some(carta => {
+          return carta.valorAtaque === obj.valorAtaque;
+        })
+
+        if (cartasSeleccionadas.length == 0){
+          setElegida(20);
+          addCartaSeleccionada(obj);
+        }
+        else if (hayUnAs && obj.valorAtaque >1 && cartasSeleccionadas.length==1) {
+          setElegida(20);
+          addCartaSeleccionada(obj);
+        }
+        else if (!hayUnAs && cartasSeleccionadas.length==1 && cartasSeleccionadas[0].valorAtaque>1 && obj.valorAtaque == 1){
+          setElegida(20);
+          addCartaSeleccionada(obj);
+        }
+        else if (!hayUnAs && hayUnaIgual && sumaValores+obj.valorAtaque<=10) {
+          console.log("hay", sumaValores);
+          console.log("aniadiendo", sumaValores+obj.valorAtaque);
+          setElegida(20);
+          addCartaSeleccionada(obj);
+        }
     } else {
         setElegida(0)
         removeCartaSeleccionada(obj);
