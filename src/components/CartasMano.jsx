@@ -45,8 +45,8 @@ function CartasMano({obj, zindex}) {
           addCartaSeleccionada(obj);
         }
         else if (!hayUnAs && hayUnaIgual && sumaValores+obj.valorAtaque<=10) {
-          console.log("hay", sumaValores);
-          console.log("aniadiendo", sumaValores+obj.valorAtaque);
+          //console.log("hay", sumaValores);
+          //console.log("aniadiendo", sumaValores+obj.valorAtaque);
           setElegida(20);
           addCartaSeleccionada(obj);
         }
