@@ -143,6 +143,34 @@ function App() {
     }
   },[mazoDescartes, estadoTurnoJugador])
 
+  //estado turno 4
+  useLayoutEffect(() => {
+    if(estadoPrincipal==2) {
+      console.log("Estado Turno 3")
+      if (vidaMonstruo==0){
+        addCartaFinalMazo(monstruos.pop())
+      } else {
+        addCartaDescartes(monstruos.pop())
+      }
+      setEstadoTurnoJugador(0);
+      setAtaqueJugador(0);
+      setDefensaJugador(0);
+      setVidaMonstruo(monstruos[monstruos.length-1].valorDefensa);
+      setDefensaMayorAtaqueMonstruo(false);
+      setPuntosDescarte(0);
+      setMensajeDescartarJugador("")
+      for (const carta of cartasSeleccionadas){
+        addCartaDescartes(carta);
+        removeCartaSeleccionada(carta);
+        removeCartaMano(carta);
+      }
+      for (const carta of cartasJugadas) {
+        removeCartaJugada(carta);
+      }
+      setEstadoPrincipal(1);
+      setEstadoTurnoJugador(0);
+    }
+  },[vidaMonstruo, estadoPrincipal])
   //Paso 1 Turno
   //Ataque al enemigo y aplicar poderes
   function pasoPoderYAtaque(){
