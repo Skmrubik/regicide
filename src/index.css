@@ -49,21 +49,26 @@
   height: 100%;
   width: 35%;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   padding-top: 10vh;
-  justify-content: center;
+  color: white;
 }
 
 .cartas-mano{
   padding-top: 50px;
   width: 700px;
 }
-.container-button-echar-cartas{
-  display: flex;
-  justify-content: center;
-}
 .button-echar-cartas {
   height: 30px;
-  width: 100px;
+  width: 120px;
+  cursor: pointer;
+}
+.button-echar-cartas-disabled{
+  height: 30px;
+  width: 120px;
+  cursor: none;
 }
 .container-mazo-monstruos{
   display: flex;

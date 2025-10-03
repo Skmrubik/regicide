@@ -19,7 +19,7 @@ function CartasMano({obj, zindex}) {
   },[estadoTurnoJugador])
 
   const elegirCarta =() => {
-    if(elegida == 0) {
+    if(elegida == 0 && estadoTurnoJugador == 0) {
         let sumaValores = 0;
         for (const carta of cartasSeleccionadas) {
           sumaValores +=carta.valorAtaque;
@@ -50,6 +50,9 @@ function CartasMano({obj, zindex}) {
           setElegida(20);
           addCartaSeleccionada(obj);
         }
+    } else if (elegida==0 && estadoTurnoJugador==2){
+      setElegida(20);
+      addCartaSeleccionada(obj);
     } else {
         setElegida(0)
         removeCartaSeleccionada(obj);

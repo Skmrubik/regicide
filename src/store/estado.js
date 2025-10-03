@@ -49,6 +49,9 @@ export const useEstado = create((set, get) => ({
     addCartaSeleccionada: (carta) => set((state) => ({
         cartasSeleccionadas: [...state.cartasSeleccionadas, carta]
     })),
+    addCartaDescartes: (carta) => set((state) => ({
+        mazoDescartes: [...state.mazoDescartes, carta]
+    })),
     removeCartaSeleccionada: (cartaEliminar) => set((state) => ({
         cartasSeleccionadas: state.cartasSeleccionadas.filter(carta => carta.image != cartaEliminar.image)
     })),

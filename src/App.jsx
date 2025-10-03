@@ -10,6 +10,10 @@ import CartasMazoDescartes from './components/CartasMazoDescartes.jsx';
 import iconHeart from '../public/heart.svg'
 
 function App() {
+  const [puntosDescarte, setPuntosDescarte] = useState(0);
+  const [superaDescarte, setSuperaDescarte] = useState(true);
+  const [mensajeDescartarJugador,setMensajeDescartarJugador] = useState("");
+  const [mensajeBoton,setMensajeBoton] = useState("Jugar cartas");
   const mazo = useEstado((state) => state.mazo);
   const monstruos = useEstado((state) => state.monstruos);
   const mano = useEstado((state) => state.mano);
@@ -20,6 +24,7 @@ function App() {
   const mezclarMazo = useEstado((state) => state.shuffleMazo);
   const aniadirCartaMano = useEstado((state) => state.addCartaMano);
   const addCartaJugada = useEstado((state) => state.addCartaJugada);
+  const removeCartaSeleccionada = useEstado((state) => state.removeCartaSeleccionada);
   const removeCartaMano = useEstado((state) => state.removeCartaMano);
   const estadoPrincipal = useEstado((state) => state.estadoPrincipal);
   const setEstadoPrincipal = useEstado((state) => state.setEstadoPrincipal);
@@ -33,6 +38,7 @@ function App() {
   const defensaJugador = useEstado((state) => state.defensaJugador);
   const ataqueJugador = useEstado((state) => state.ataqueJugador);
   const addCartaFinalMazo = useEstado((state) => state.addCartaFinalMazo);
+  const addCartaDescartes = useEstado((state) => state.addCartaDescartes);
   const estado = useEstado();
 
   function shuffleArray(inputArray) {
@@ -62,9 +68,24 @@ function App() {
 
   useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 2) {
+      const ataqueMonstruo = monstruos[monstruos.length-1].valorAtaque;
+      setSuperaDescarte(false);
+      setMensajeDescartarJugador("Debes descartarte de "+ ataqueMonstruo +" puntos")
+      setMensajeBoton("Descartar cartas");
       console.log(mano)
+      let totalDescarte = 0;
+      console.log("cartas seleccionadas", cartasSeleccionadas)
+      for(const carta of cartasSeleccionadas){
+        totalDescarte+=carta.valorAtaque;
+      }
+      if (totalDescarte>= ataqueMonstruo){
+        setSuperaDescarte(true);
+        setPuntosDescarte(totalDescarte);
+      } else {
+        setPuntosDescarte(totalDescarte);
+      }
     }
-  },[vidaMonstruo])
+  },[estadoTurnoJugador, cartasSeleccionadas])
   //Paso 1 Turno
   //Ataque al enemigo y aplicar poderes
   function paso1(){
@@ -76,6 +97,9 @@ function App() {
     let ataqueTotal = 0;
     let cartasCoger = 0;
     let cartasDescarte = 0;
+    for(const carta of cartasSeleccionadas){
+      removeCartaSeleccionada(carta);
+    }
     for(const carta of cartasJugadas){
       if (carta.poder == 'C'){
         cartasPorPoder[0]++;
@@ -102,7 +126,7 @@ function App() {
     }
     if (cartasJugadas.length>1) {
       if (cartasPorPoder[2]>0){
-        ataqueTotal*=2;
+        ataqueTotal=ataqueTotal*2;
       }
       if (cartasPorPoder[3]>0){
         defensaTotal=cartasPorDefensa[0]+cartasPorDefensa[1]+cartasPorDefensa[2]+cartasPorDefensa[3];
@@ -116,6 +140,9 @@ function App() {
     } else {
       cartasCoger= cartasPorPuntos[1];
       cartasDescarte = cartasPorPuntos[0];
+      if (cartasPorPoder[2]>0){
+        ataqueTotal=ataqueTotal*2;
+      }
     }
     console.log("Cartas por puntos" , cartasPorPuntos)
     console.log("Coger ", cartasCoger);
@@ -163,11 +190,21 @@ function App() {
   }
   //Paso 0 Turno
   function jugarCartas() {
-    for (const carta of cartasSeleccionadas) {
-      addCartaJugada(carta);
-      removeCartaMano(carta);
+    if(estadoTurnoJugador==0){
+      for (const carta of cartasSeleccionadas) {
+        addCartaJugada(carta);
+        removeCartaMano(carta);
+      }
+      setEstadoTurnoJugador(1); 
+    } else if (estadoTurnoJugador==2){
+      for (const carta of cartasSeleccionadas){
+        addCartaDescartes(carta);
+        removeCartaSeleccionada(carta);
+        removeCartaMano(carta);
+      }
+      setEstadoTurnoJugador(3);
     }
-    setEstadoTurnoJugador(1); 
+    
   }
   return (
     <>
@@ -206,9 +243,12 @@ function App() {
     </div>
       <div className='container-mano'>
         <div className='container-button-echar-cartas'>
-          <button className='button-echar-cartas' onClick={jugarCartas}>Jugar cartas</button>
+          {puntosDescarte != 0 && <p>Llevas {puntosDescarte} acumulados</p>}
+          <button className={superaDescarte?'button-echar-cartas':'button-echar-cartas-disabled'} 
+          onClick={jugarCartas} disabled={!superaDescarte}>{mensajeBoton}</button>
         </div>
         <div className='cartas-mano'>
+          <p style={{color: 'white', marginBottom: 40}}>{mensajeDescartarJugador}</p>
           {mano.map((carta, index) => (
             <CartasMano obj={carta} zindex={index} />
           ))}
