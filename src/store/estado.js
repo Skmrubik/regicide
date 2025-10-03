@@ -61,6 +61,9 @@ export const useEstado = create((set, get) => ({
     addCartaJugada: (carta) => set((state) => ({
         cartasJugadas: [...state.cartasJugadas, carta]
     })),
+    removeCartaJugada: (cartaEliminar) => set((state) => ({
+        cartasJugadas: state.cartasJugadas.filter(carta => carta.image != cartaEliminar.image)
+    })),
     addCartaFinalMazo: (carta) => set((state) => ({
         mazo: [...state.mazo, carta]
     })),

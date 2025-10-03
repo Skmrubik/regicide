@@ -14,6 +14,7 @@ function App() {
   const [superaDescarte, setSuperaDescarte] = useState(true);
   const [mensajeDescartarJugador,setMensajeDescartarJugador] = useState("");
   const [mensajeBoton,setMensajeBoton] = useState("Jugar cartas");
+  const [defensaMayorAtaqueMonstruo, setDefensaMayorAtaqueMonstruo] = useState(false);
   const mazo = useEstado((state) => state.mazo);
   const monstruos = useEstado((state) => state.monstruos);
   const mano = useEstado((state) => state.mano);
@@ -24,6 +25,7 @@ function App() {
   const mezclarMazo = useEstado((state) => state.shuffleMazo);
   const aniadirCartaMano = useEstado((state) => state.addCartaMano);
   const addCartaJugada = useEstado((state) => state.addCartaJugada);
+  const removeCartaJugada = useEstado((state) => state.removeCartaJugada);
   const removeCartaSeleccionada = useEstado((state) => state.removeCartaSeleccionada);
   const removeCartaMano = useEstado((state) => state.removeCartaMano);
   const estadoPrincipal = useEstado((state) => state.estadoPrincipal);
@@ -67,23 +69,49 @@ function App() {
   },[cartasJugadas])
 
   useLayoutEffect(() => {
+    if(estadoPrincipal==1 && estadoTurnoJugador == 3) {
+      setEstadoTurnoJugador(0);
+    }
+  },[mazoDescartes, estadoTurnoJugador])
+
+  useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 2) {
       const ataqueMonstruo = monstruos[monstruos.length-1].valorAtaque;
-      setSuperaDescarte(false);
-      setMensajeDescartarJugador("Debes descartarte de "+ ataqueMonstruo +" puntos")
-      setMensajeBoton("Descartar cartas");
-      console.log(mano)
-      let totalDescarte = 0;
-      console.log("cartas seleccionadas", cartasSeleccionadas)
-      for(const carta of cartasSeleccionadas){
-        totalDescarte+=carta.valorAtaque;
-      }
-      if (totalDescarte>= ataqueMonstruo){
+      let puntosADescartar = 0;
+      if (defensaJugador>=ataqueMonstruo && !defensaMayorAtaqueMonstruo){
+        puntosADescartar=0;
+        
         setSuperaDescarte(true);
-        setPuntosDescarte(totalDescarte);
-      } else {
-        setPuntosDescarte(totalDescarte);
+        setMensajeDescartarJugador("Debes descartarte de "+ puntosADescartar +" puntos")
+        setMensajeBoton("Jugar cartas");
+        for (const carta of cartasJugadas) {
+          removeCartaJugada(carta);
+        }
+        setDefensaMayorAtaqueMonstruo(true);
+        setEstadoTurnoJugador(3);
+      } else if(defensaJugador>=ataqueMonstruo && defensaMayorAtaqueMonstruo){
+        setMensajeDescartarJugador("Debes descartarte de "+ puntosADescartar +" puntos")
+        setMensajeBoton("Jugar cartas");
+        setEstadoTurnoJugador(3);
       }
+      else {
+        puntosADescartar=ataqueMonstruo-defensaJugador;
+        setSuperaDescarte(false);
+        setMensajeDescartarJugador("Debes descartarte de "+ puntosADescartar +" puntos")
+        setMensajeBoton("Descartar cartas");
+        console.log(mano)
+        let totalDescarte = 0;
+        console.log("cartas seleccionadas", cartasSeleccionadas)
+        for(const carta of cartasSeleccionadas){
+          totalDescarte+=carta.valorAtaque;
+        }
+        if (totalDescarte>= puntosADescartar){
+          setSuperaDescarte(true);
+          setPuntosDescarte(totalDescarte);
+        } else {
+          setPuntosDescarte(totalDescarte);
+        }
+      } 
     }
   },[estadoTurnoJugador, cartasSeleccionadas])
   //Paso 1 Turno
@@ -130,6 +158,7 @@ function App() {
       }
       if (cartasPorPoder[3]>0){
         defensaTotal=cartasPorDefensa[0]+cartasPorDefensa[1]+cartasPorDefensa[2]+cartasPorDefensa[3];
+        setDefensaJugador(defensaJugador+defensaTotal);
       }
       if (cartasPorPoder[1]>0){
         cartasCoger=cartasPorPuntos[0]+cartasPorPuntos[1]+cartasPorPuntos[2]+cartasPorPuntos[3];
@@ -142,6 +171,8 @@ function App() {
       cartasDescarte = cartasPorPuntos[0];
       if (cartasPorPoder[2]>0){
         ataqueTotal=ataqueTotal*2;
+      } else if (cartasPorPoder[3]>0) {
+        setDefensaJugador(defensaJugador+defensaTotal);
       }
     }
     console.log("Cartas por puntos" , cartasPorPuntos)
@@ -149,7 +180,7 @@ function App() {
     console.log("Descarte ", cartasDescarte)
     
     setAtaqueJugador(ataqueTotal);
-    setDefensaJugador(defensaTotal);
+    
     const vidaRestanteMonstruo=vidaMonstruo-ataqueTotal;
     setVidaMonstruo(vidaRestanteMonstruo)
 
@@ -191,16 +222,23 @@ function App() {
   //Paso 0 Turno
   function jugarCartas() {
     if(estadoTurnoJugador==0){
+      setAtaqueJugador(0);
+      console.log("Seleccionadas", cartasSeleccionadas)
       for (const carta of cartasSeleccionadas) {
         addCartaJugada(carta);
         removeCartaMano(carta);
       }
+      const myTimeout = setTimeout(console.log("Espera"), 500);
+      console.log("jugadas", cartasJugadas)
       setEstadoTurnoJugador(1); 
     } else if (estadoTurnoJugador==2){
       for (const carta of cartasSeleccionadas){
         addCartaDescartes(carta);
         removeCartaSeleccionada(carta);
         removeCartaMano(carta);
+      }
+      for (const carta of cartasJugadas) {
+        removeCartaJugada(carta);
       }
       setEstadoTurnoJugador(3);
     }
