@@ -43,7 +43,12 @@ function App() {
   const ataqueJugador = useEstado((state) => state.ataqueJugador);
   const addCartaFinalMazo = useEstado((state) => state.addCartaFinalMazo);
   const addCartaDescartes = useEstado((state) => state.addCartaDescartes);
-  const estado = useEstado();
+  const resetMazo = useEstado((state) => state.resetMazo);
+  const resetMonstruos = useEstado((state) => state.resetMonstruos);
+  const resetMazoDescartes = useEstado((state) => state.resetMazoDescartes);
+  const resetCartasMano = useEstado((state) => state.resetMano);
+  const resetCartasSeleccionadas = useEstado((state) => state.resetCartasSeleccionadas);
+  const resetCartasJugadas = useEstado((state) => state.resetCartasJugadas);
 
   function shuffleArray(inputArray) {
     inputArray.sort(() => Math.random() - 0.5);
@@ -62,7 +67,7 @@ function App() {
       else setVidaMonstruo(40);
       setEstadoPrincipal(1)
     }
-  },[])
+  },[estadoPrincipal])
 
   //estado turno 1 FASE DE APLICAR PODERES Y ATACAR
   useLayoutEffect(() => {
@@ -337,6 +342,17 @@ function App() {
     }
     setNumeroVidas(numeroVidas-1);
   }
+  function nuevaPartida(){
+    resetMazo();
+    resetMonstruos(); 
+    resetMazoDescartes(); 
+    resetCartasMano(); 
+    resetCartasSeleccionadas(); 
+    resetCartasJugadas();
+    setEstadoPrincipal(0);
+    setEstadoTurnoJugador(0);
+  }
+
   return (
     <>
     <div className='container-mazos'>
@@ -353,6 +369,7 @@ function App() {
         <CartasMazoDescartes descartes={mazoDescartes} />
       </div>
       <div className='container-vidas'>
+        <button className='button-partida-nueva' onClick={nuevaPartida}>NUEVA PARTIDA</button>
         <p>VIDAS</p>
         <div className='vidas'>
         {numeroVidas>1 && <button className={enabledVida?'button-vida':'button-vida-disabled'} disabled={!enabledVida} onClick={resetMano}>
