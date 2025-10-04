@@ -15,6 +15,8 @@ function App() {
   const [mensajeDescartarJugador,setMensajeDescartarJugador] = useState("");
   const [mensajeBoton,setMensajeBoton] = useState("Jugar cartas");
   const [defensaMayorAtaqueMonstruo, setDefensaMayorAtaqueMonstruo] = useState(false);
+  const [enabledVida, setEnabledVida] = useState(true);
+  const [numeroVidas, setNumeroVidas] = useState(2);
   const mazo = useEstado((state) => state.mazo);
   const monstruos = useEstado((state) => state.monstruos);
   const mano = useEstado((state) => state.mano);
@@ -139,6 +141,7 @@ function App() {
   useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 4) {
       console.log("Estado Turno 3")
+      setEnabledVida(true);
       setEstadoTurnoJugador(0);
     }
   },[mazoDescartes, estadoTurnoJugador])
@@ -167,6 +170,7 @@ function App() {
       for (const carta of cartasJugadas) {
         removeCartaJugada(carta);
       }
+      setEnabledVida(true);
       setEstadoPrincipal(1);
       setEstadoTurnoJugador(0);
     }
@@ -284,6 +288,7 @@ function App() {
   function jugarODescartarCartas() {
     //Paso 0 Turno
     if(estadoTurnoJugador==0){
+      setEnabledVida(false);
       //console.log("Seleccionadas", cartasSeleccionadas)
       for (const carta of cartasSeleccionadas) {
         addCartaJugada(carta);
@@ -323,6 +328,15 @@ function App() {
     }
     
   }
+  function resetMano(){
+    for (const carta of mano){
+      removeCartaMano(carta);
+    }
+    for (let i=0; i<8; i++){
+      aniadirCartaMano(mazo.shift());
+    }
+    setNumeroVidas(numeroVidas-1);
+  }
   return (
     <>
     <div className='container-mazos'>
@@ -341,8 +355,12 @@ function App() {
       <div className='container-vidas'>
         <p>VIDAS</p>
         <div className='vidas'>
+        {numeroVidas>1 && <button className={enabledVida?'button-vida':'button-vida-disabled'} disabled={!enabledVida} onClick={resetMano}>
           <img src="heart.svg" className="imagen-vida" />
+        </button>}
+        {numeroVidas!=0 && <button className={enabledVida?'button-vida':'button-vida-disabled'} disabled={!enabledVida} onClick={resetMano}>
           <img src="heart.svg" className="imagen-vida" />
+        </button>}
         </div>
       </div>
     </div>

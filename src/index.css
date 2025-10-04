@@ -55,7 +55,15 @@
   padding-top: 10vh;
   color: white;
 }
-
+.button-vida{
+  background-color: darkgreen;
+  border: none;
+  cursor: pointer;
+} 
+.button-vida-disabled{
+  background-color: darkgreen;
+  border: none;
+}
 .cartas-mano{
   padding-top: 50px;
   width: 700px;
