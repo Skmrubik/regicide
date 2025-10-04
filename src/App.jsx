@@ -75,24 +75,8 @@ function App() {
   useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 1) {
       //console.log("Cartas jugadas",cartasJugadas)
-      const poderMonstruo = monstruos[monstruos.length-1].poder;
-      console.log("poderSinEstado", monstruos[monstruos.length-1])
-      if (poderMonstruo == 'C'){
-        console.log("Comprueba C")
-        setPoderActual(0);
-      }
-      else if (poderMonstruo == 'D'){
-        console.log("Comprueba D")
-        setPoderActual(1);
-      }
-      else if (poderMonstruo == 'T'){
-        console.log("Comprueba T")
-        setPoderActual(2);
-      }
-      else if (poderMonstruo == 'P'){
-        console.log("Comprueba P")
-        setPoderActual(3);
-      } 
+      
+      
       console.log("Estado Turno 1")
       pasoPoderYAtaque();
     }
@@ -317,6 +301,24 @@ function App() {
   function jugarODescartarCartas() {
     //Paso 0 Turno
     if(estadoTurnoJugador==0){
+      const poderMonstruo = monstruos[monstruos.length-1].poder;
+      console.log("poderSinEstado", monstruos[monstruos.length-1])
+      if (poderMonstruo == 'C'){
+        console.log("Comprueba C")
+        setPoderActual(0);
+      }
+      else if (poderMonstruo == 'D'){
+        console.log("Comprueba D")
+        setPoderActual(1);
+      }
+      else if (poderMonstruo == 'T'){
+        console.log("Comprueba T")
+        setPoderActual(2);
+      }
+      else if (poderMonstruo == 'P'){
+        console.log("Comprueba P")
+        setPoderActual(3);
+      } 
       setEnabledVida(false);
       //console.log("Seleccionadas", cartasSeleccionadas)
       for (const carta of cartasSeleccionadas) {
