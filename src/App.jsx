@@ -49,6 +49,8 @@ function App() {
   const resetCartasMano = useEstado((state) => state.resetMano);
   const resetCartasSeleccionadas = useEstado((state) => state.resetCartasSeleccionadas);
   const resetCartasJugadas = useEstado((state) => state.resetCartasJugadas);
+  const setPoderActual = useEstado((state) => state.setPoderActual);
+  const poderActual = useEstado((state) => state.poderActual);
 
   function shuffleArray(inputArray) {
     inputArray.sort(() => Math.random() - 0.5);
@@ -73,7 +75,24 @@ function App() {
   useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 1) {
       //console.log("Cartas jugadas",cartasJugadas)
-      
+      const poderMonstruo = monstruos[monstruos.length-1].poder;
+      console.log("poderSinEstado", monstruos[monstruos.length-1])
+      if (poderMonstruo == 'C'){
+        console.log("Comprueba C")
+        setPoderActual(0);
+      }
+      else if (poderMonstruo == 'D'){
+        console.log("Comprueba D")
+        setPoderActual(1);
+      }
+      else if (poderMonstruo == 'T'){
+        console.log("Comprueba T")
+        setPoderActual(2);
+      }
+      else if (poderMonstruo == 'P'){
+        console.log("Comprueba P")
+        setPoderActual(3);
+      } 
       console.log("Estado Turno 1")
       pasoPoderYAtaque();
     }
@@ -183,6 +202,7 @@ function App() {
   //Paso 1 Turno
   //Ataque al enemigo y aplicar poderes
   function pasoPoderYAtaque(){
+    console.log("PODER ACTUAL ", poderActual)
     //C, D, T, P
     let cartasPorPoder = [0,0,0,0];
     let cartasPorPuntos = [0,0,0,0];
@@ -221,10 +241,12 @@ function App() {
     }
     //Jugamos mas de una carta
     if (cartasJugadas.length>1) {
-      if (cartasPorPoder[2]>0){
+      // PODER TREBOLES
+      if (cartasPorPoder[2]>0 && poderActual!=2){
         ataqueTotal=ataqueTotal*2;
       }
-      if (cartasPorPoder[3]>0){
+      //PODER PICAS
+      if (cartasPorPoder[3]>0 && poderActual!=3){
         defensaTotal=cartasPorDefensa[0]+cartasPorDefensa[1]+cartasPorDefensa[2]+cartasPorDefensa[3];
         setDefensaJugador(defensaJugador+defensaTotal);
       }
@@ -237,9 +259,11 @@ function App() {
     } else { //jugamos una carta
       cartasCoger= cartasPorPuntos[1];
       cartasDescarte = cartasPorPuntos[0];
-      if (cartasPorPoder[2]>0){
+      //PODER TREBOLES
+      if (cartasPorPoder[2]>0 && poderActual!=2){
         ataqueTotal=ataqueTotal*2;
-      } else if (cartasPorPoder[3]>0) {
+      } //PODER PICAS 
+      else if (cartasPorPoder[3]>0  && poderActual!=3) {
         setDefensaJugador(defensaJugador+defensaTotal);
       }
     }
@@ -253,7 +277,7 @@ function App() {
     setVidaMonstruo(vidaRestanteMonstruo)
 
     //Devolvemos cartas al mazo de descartes (PODER CORAZONES)
-    if(cartasPorPoder[0]>0){
+    if(cartasPorPoder[0]>0 && poderActual!=0){
       if(mazoDescartes.length>cartasDescarte){
         shuffleMazoDescartes();
         for(let i=0; i<cartasDescarte; i++){
@@ -267,7 +291,7 @@ function App() {
       } 
     } 
     //Cogemos cartas del mazo (PODER DIAMANTES)
-    if (cartasPorPoder[1]>0){
+    if (cartasPorPoder[1]>0 && poderActual!=1){
       //console.log("Añadir a mano")
       const cartasFaltanMano = 8-mano.length;
       if (cartasCoger <= cartasFaltanMano) {
@@ -349,6 +373,10 @@ function App() {
     resetCartasMano(); 
     resetCartasSeleccionadas(); 
     resetCartasJugadas();
+    setMensajeDescartarJugador("");
+    setAtaqueJugador(0);
+    setDefensaJugador(0);
+    setMensajeBoton("Jugar cartas");
     setEstadoPrincipal(0);
     setEstadoTurnoJugador(0);
   }

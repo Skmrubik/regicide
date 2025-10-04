@@ -18,9 +18,11 @@ export const useEstado = create((set, get) => ({
     vidaMonstruo: 0,
     ataqueJugador: 0,
     defensaJugador: 0,
+    poderActual: 0,
 
     setEstadoPrincipal: (estadoPrincipal) => set({ estadoPrincipal}),
     setEstadoTurnoJugador: (estadoTurnoJugador) => set({ estadoTurnoJugador}),
+    setPoderActual: (poderActual) => set({ poderActual}),
     setMazo: (mazo) => set({ mazo}),
     resetMazo: () => set({mazo: cartasMazo}),
     resetMonstruos: () => set({monstruos: cartasMonstruos}),
