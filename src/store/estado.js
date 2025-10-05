@@ -54,8 +54,9 @@ export const useEstado = create((set, get, store) => ({
     setDefensaJugador: (defensaJugador) => set({defensaJugador}),
     setMonstruos: (monstruos) => set({ monstruos}),
     shuffleMazo: () => set((state) => {
-        shuffleArray(state.mazo)
-        return {mazo: state.mazo}
+        const newArray = state.mazo.filter(carta => carta.valorDefensa < 15);
+        shuffleArray(newArray)
+        return {mazo: newArray}
     }),
     shuffleMazoDescartes: () => set((state) => {
         shuffleArray(state.mazoDescartes)
@@ -90,6 +91,9 @@ export const useEstado = create((set, get, store) => ({
     })),
     addCartaJugada: (carta) => set((state) => ({
         cartasJugadas: [...state.cartasJugadas, carta]
+    })),
+    addCartaMonstruo: (carta) => set((state) => ({
+        monstruos: [...state.monstruos, carta]
     })),
     removeCartaJugada: (cartaEliminar) => set((state) => ({
         cartasJugadas: state.cartasJugadas.filter(carta => carta.image != cartaEliminar.image)

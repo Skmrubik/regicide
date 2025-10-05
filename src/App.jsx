@@ -43,6 +43,7 @@ function App() {
   const ataqueJugador = useEstado((state) => state.ataqueJugador);
   const addCartaFinalMazo = useEstado((state) => state.addCartaFinalMazo);
   const addCartaDescartes = useEstado((state) => state.addCartaDescartes);
+  const addCartaMonstruo = useEstado((state) => state.addCartaMonstruo);
   const resetMazo = useEstado((state) => state.resetMazo);
   const resetMonstruos = useEstado((state) => state.resetMonstruos);
   const resetMazoDescartes = useEstado((state) => state.resetMazoDescartes);
@@ -63,6 +64,11 @@ function App() {
 
   useLayoutEffect(()=> {
     if(estadoPrincipal==0) {
+      for(const carta of mazo){
+        if (carta.valorDefensa>15){
+          addCartaMonstruo(carta);
+        }
+      }
       mezclarMazo();
       mezclarMonstruos();
       addNCartasMano(popLastNMazo(8));
@@ -71,6 +77,7 @@ function App() {
       else if (monstruos.length>4) setVidaMonstruo(30);
       else setVidaMonstruo(40);
       setEstadoPrincipal(1)
+      console.log(monstruos);
     }
   },[estadoPrincipal])
 
