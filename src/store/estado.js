@@ -6,7 +6,7 @@ function shuffleArray(inputArray) {
     inputArray.sort(() => Math.random() - 0.5);
 }
 
-export const useEstado = create((set, get) => ({ 
+export const useEstado = create((set, get, store) => ({ 
     estadoPrincipal: 0,
     estadoTurnoJugador: 0,
     mazo: cartasMazo,
@@ -24,12 +24,21 @@ export const useEstado = create((set, get) => ({
     setEstadoTurnoJugador: (estadoTurnoJugador) => set({ estadoTurnoJugador}),
     setPoderActual: (poderActual) => set({ poderActual}),
     setMazo: (mazo) => set({ mazo}),
+    repartirCartasIniciales: () => set((state) => {
+        for (let i= 0; i<8; i++){
+            state.mano.push(state.mazo.pop());
+        }
+    }),
     resetMazo: () => set({mazo: cartasMazo}),
     resetMonstruos: () => set({monstruos: cartasMonstruos}),
     resetMazoDescartes: () => set({mazoDescartes: []}),
     resetMano: () => set({mano: []}),
     resetCartasSeleccionadas: () => set({cartasSeleccionadas: []}),
     resetCartasJugadas: () => set({cartasJugadas: []}),
+    reset: () => {
+    // getInitialState() obtiene el objeto de estado inicial (count: 0, username: 'Invitado')
+        set(store.getInitialState(), true);
+    },
     setVidaMonstruo: (vidaMonstruo) => set({vidaMonstruo}),
     setAtaqueJugador: (ataqueJugador) => set({ataqueJugador}),
     setDefensaJugador: (defensaJugador) => set({defensaJugador}),
@@ -54,6 +63,9 @@ export const useEstado = create((set, get) => ({
     addCartaMano: (carta) => set((state) => ({
         mano: [...state.mano, carta]
     })),
+    addNCartasMano: (cartas) => set((state) => ({
+        mano: [...state.mano, ...cartas]
+    })),
     addCartaSeleccionada: (carta) => set((state) => ({
         cartasSeleccionadas: [...state.cartasSeleccionadas, carta]
     })),
@@ -71,6 +83,29 @@ export const useEstado = create((set, get) => ({
     })),
     removeCartaJugada: (cartaEliminar) => set((state) => ({
         cartasJugadas: state.cartasJugadas.filter(carta => carta.image != cartaEliminar.image)
+    })),
+    popLastNMazoDescartes: (n) => {
+        // Obtener el estado actual del array
+        const currentItems = get().mazoDescartes;
+        const remainingItems = currentItems.slice(0, -n);
+        const removedElements = currentItems.slice(-n);
+        set({ mazoDescartes: remainingItems });
+
+        // 4. Retornar los elementos eliminados
+        return removedElements;
+    },
+    popLastNMazo: (n) => {
+        // Obtener el estado actual del array
+        const currentItems = get().mazo;
+        const remainingItems = currentItems.slice(0, -n);
+        const removedElements = currentItems.slice(-n);
+        set({ mazo: remainingItems });
+
+        // 4. Retornar los elementos eliminados
+        return removedElements;
+    },
+    addNCartasFinalMazo: (cartas) => set((state) => ({
+        mazo: [...state.mazo, ...cartas]
     })),
     addCartaFinalMazo: (carta) => set((state) => ({
         mazo: [...state.mazo, carta]

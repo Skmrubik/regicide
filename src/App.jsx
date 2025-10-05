@@ -49,8 +49,14 @@ function App() {
   const resetCartasMano = useEstado((state) => state.resetMano);
   const resetCartasSeleccionadas = useEstado((state) => state.resetCartasSeleccionadas);
   const resetCartasJugadas = useEstado((state) => state.resetCartasJugadas);
+  const {reset}= useEstado();
   const setPoderActual = useEstado((state) => state.setPoderActual);
   const poderActual = useEstado((state) => state.poderActual);
+  const repartirCartasIniciales = useEstado((state) => state.repartirCartasIniciales);
+  const popLastNMazoDescartes = useEstado((state) => state.popLastNMazoDescartes);
+  const popLastNMazo = useEstado((state) => state.popLastNMazo);
+  const addNCartasFinalMazo = useEstado((state) => state.addNCartasFinalMazo);
+  const addNCartasMano = useEstado((state) => state.addNCartasMano);
 
   function shuffleArray(inputArray) {
     inputArray.sort(() => Math.random() - 0.5);
@@ -60,12 +66,10 @@ function App() {
     if(estadoPrincipal==0) {
       mezclarMazo();
       mezclarMonstruos();
-      //console.log("Monstruos", mazo)
-      for (let i=0; i<8; i++){
-        aniadirCartaMano(mazo.pop());
-      }
-      if (monstruos.length>7) setVidaMonstruo(20);
-      else if (monstruos.length>3) setVidaMonstruo(30);
+      addNCartasMano(popLastNMazo(8));
+      
+      if (monstruos.length>8) setVidaMonstruo(20);
+      else if (monstruos.length>4) setVidaMonstruo(30);
       else setVidaMonstruo(40);
       setEstadoPrincipal(1)
     }
@@ -76,7 +80,7 @@ function App() {
     if(estadoPrincipal==1 && estadoTurnoJugador == 1) {
       //console.log("Cartas jugadas",cartasJugadas)
       
-      
+      console.log("Mazo", mazo)
       console.log("Estado Turno 1")
       pasoPoderYAtaque();
     }
@@ -101,6 +105,7 @@ function App() {
           removeCartaMano(carta);
         }
         for (const carta of cartasJugadas) {
+          addCartaDescartes(carta);
           removeCartaJugada(carta);
         }
         setEstadoTurnoJugador(0);
@@ -114,6 +119,7 @@ function App() {
           removeCartaMano(carta);
         }
         for (const carta of cartasJugadas) {
+          addCartaDescartes(carta);
           removeCartaJugada(carta);
         }
         setEstadoTurnoJugador(0);
@@ -176,6 +182,7 @@ function App() {
         removeCartaMano(carta);
       }
       for (const carta of cartasJugadas) {
+        addCartaDescartes(carta);
         removeCartaJugada(carta);
       }
       setEnabledVida(true);
@@ -253,7 +260,7 @@ function App() {
     }
     //console.log("Cartas por puntos" , cartasPorPuntos)
     //console.log("Coger ", cartasCoger);
-    //console.log("Descarte ", cartasDescarte)
+    console.log("Descarte ", cartasDescarte)
     
     setAtaqueJugador(ataqueTotal);
     //Quitamos vida al monstruo
@@ -264,14 +271,10 @@ function App() {
     if(cartasPorPoder[0]>0 && poderActual!=0){
       if(mazoDescartes.length>cartasDescarte){
         shuffleMazoDescartes();
-        for(let i=0; i<cartasDescarte; i++){
-          addCartaFinalMazo(mazoDescartes.pop())
-        }
-      } else if(mazoDescartes.length>0 &&mazoDescartes.length<=cartasDescarte){
+        addNCartasFinalMazo(popLastNMazoDescartes(cartasDescarte));
+      } else if(mazoDescartes.length>0 && mazoDescartes.length<=cartasDescarte){
         shuffleMazoDescartes();
-        for(let i=0; i<mazoDescartes.length; i++){
-          addCartaFinalMazo(mazoDescartes.pop())
-        }
+        addNCartasFinalMazo(popLastNMazoDescartes(mazoDescartes.length))
       } 
     } 
     //Cogemos cartas del mazo (PODER DIAMANTES)
@@ -328,7 +331,7 @@ function App() {
       //console.log("jugadas", cartasJugadas)
       setEstadoTurnoJugador(1); 
     } //DESCARTARSE DE CARTAS Y DESCARTAR LAS CARTAS JUGADAS
-    else if (estadoTurnoJugador==2){
+    else if (estadoTurnoJugador==2 || estadoTurnoJugador==3){
       for (const carta of cartasSeleccionadas){
         addCartaDescartes(carta);
         removeCartaSeleccionada(carta);
@@ -336,27 +339,30 @@ function App() {
       }
       for (const carta of cartasJugadas) {
         removeCartaJugada(carta);
-      }
-      setAtaqueJugador(0)
-      setMensajeBoton("Jugar cartas");
-      setPuntosDescarte(0);
-      setMensajeDescartarJugador("")
-      setEstadoTurnoJugador(4);
-    } else if (estadoTurnoJugador==3){
-      for (const carta of cartasSeleccionadas){
         addCartaDescartes(carta);
-        removeCartaSeleccionada(carta);
-        removeCartaMano(carta);
-      }
-      for (const carta of cartasJugadas) {
-        removeCartaJugada(carta);
       }
       setAtaqueJugador(0)
       setMensajeBoton("Jugar cartas");
       setPuntosDescarte(0);
       setMensajeDescartarJugador("")
       setEstadoTurnoJugador(4);
-    }
+    } 
+    //else if (estadoTurnoJugador==3){
+    //  for (const carta of cartasSeleccionadas){
+    //    addCartaDescartes(carta);
+    //    removeCartaSeleccionada(carta);
+    //    removeCartaMano(carta);
+    //  }
+    //  for (const carta of cartasJugadas) {
+    //    removeCartaJugada(carta);
+    //    addCartaDescartes(carta);
+    //  }
+    //  setAtaqueJugador(0)
+    //  setMensajeBoton("Jugar cartas");
+    //  setPuntosDescarte(0);
+    //  setMensajeDescartarJugador("")
+    //  setEstadoTurnoJugador(4);
+    //}
     
   }
   function resetMano(){
@@ -369,15 +375,24 @@ function App() {
     setNumeroVidas(numeroVidas-1);
   }
   function nuevaPartida(){
-    resetMazo();
+    console.log("Mano tam",mano.length);
+    for(const carta of mano){
+      addCartaFinalMazo(carta)
+      console.log("devolver carta mano")
+    }
+    for(const carta of mazoDescartes){
+      addCartaFinalMazo(carta)
+      console.log("devolver carta mazo")
+    }
+    //resetMazo();
     resetMonstruos(); 
     resetMazoDescartes(); 
     resetCartasMano(); 
     resetCartasSeleccionadas(); 
     resetCartasJugadas();
+    //reset();
     setMensajeDescartarJugador("");
-    setAtaqueJugador(0);
-    setDefensaJugador(0);
+    setSuperaDescarte(true);
     setMensajeBoton("Jugar cartas");
     setEstadoPrincipal(0);
     setEstadoTurnoJugador(0);
