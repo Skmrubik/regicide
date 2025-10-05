@@ -24,9 +24,19 @@ export const useEstado = create((set, get, store) => ({
     setEstadoTurnoJugador: (estadoTurnoJugador) => set({ estadoTurnoJugador}),
     setPoderActual: (poderActual) => set({ poderActual}),
     setMazo: (mazo) => set({ mazo}),
+    getMazo: () =>{
+        const currentMazo = get().mazo;
+        return currentMazo;
+    },
     repartirCartasIniciales: () => set((state) => {
-        for (let i= 0; i<8; i++){
-            state.mano.push(state.mazo.pop());
+        if (state.mazo.length>7){
+            for (let i= 0; i<8; i++){
+                state.mano.push(state.mazo.pop());
+            }
+        } else {
+            for (let i= 0; state.mazo.length<8; i++){
+                state.mano.push(state.mazo.pop());
+            }
         }
     }),
     resetMazo: () => set({mazo: cartasMazo}),
@@ -104,8 +114,21 @@ export const useEstado = create((set, get, store) => ({
         // 4. Retornar los elementos eliminados
         return removedElements;
     },
+    popLastNMano: (n) => {
+        // Obtener el estado actual del array
+        const currentItems = get().mano;
+        const remainingItems = currentItems.slice(0, -n);
+        const removedElements = currentItems.slice(-n);
+        set({ mano: remainingItems });
+
+        // 4. Retornar los elementos eliminados
+        return removedElements;
+    },
     addNCartasFinalMazo: (cartas) => set((state) => ({
         mazo: [...state.mazo, ...cartas]
+    })),
+    addNCartasFinalMazoDescartes: (cartas) => set((state) => ({
+        mazoDescartes: [...state.mazoDescartes, ...cartas]
     })),
     addCartaFinalMazo: (carta) => set((state) => ({
         mazo: [...state.mazo, carta]
