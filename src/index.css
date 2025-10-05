@@ -71,12 +71,19 @@
 .button-echar-cartas {
   height: 30px;
   width: 120px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 .button-echar-cartas-disabled{
   height: 30px;
   width: 120px;
-  cursor: none;
+  background-color: grey;
+  color: white;
+  border: none;
+  border-radius: 5px;
 }
 .container-mazo-monstruos{
   display: flex;

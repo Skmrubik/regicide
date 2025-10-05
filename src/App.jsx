@@ -61,10 +61,6 @@ function App() {
   const addNCartasMano = useEstado((state) => state.addNCartasMano);
   const getMazo = useEstado((state) => state.getMazo);
 
-  function shuffleArray(inputArray) {
-    inputArray.sort(() => Math.random() - 0.5);
-  }
-
   useLayoutEffect(()=> {
     if(estadoPrincipal==0) {
       mezclarMazo();
@@ -92,6 +88,19 @@ function App() {
       console.log("Estado Turno 2")
       const ataqueMonstruo = monstruos[monstruos.length-1].valorAtaque;
       let puntosADescartar = 0;
+      //Es posible cambiar este if por el if-else siguiente?
+      //if (defensaJugador>=ataqueMonstruo){        
+      //  if(!defensaMayorAtaqueMonstruo){
+      //    setSuperaDescarte(true);
+      //    setDefensaMayorAtaqueMonstruo(true);
+      //  } 
+      //  setMensajeDescartarJugador("Has superado con tu defensa el ataque del rival. Turno de jugar cartas de nuevo.")
+      //  setMensajeBoton("Jugar cartas");
+      //  descartarCartasMano();
+      //  descartarCartasJugadas();
+      //  setEstadoTurnoJugador(0);
+      //}
+
       //Si acabamos de superar con la defensa al ataque del monstruo
       if (defensaJugador>=ataqueMonstruo && !defensaMayorAtaqueMonstruo){        
         setSuperaDescarte(true);
@@ -115,9 +124,7 @@ function App() {
         setSuperaDescarte(false);
         setMensajeDescartarJugador("Debes descartarte de "+ puntosADescartar +" puntos")
         setMensajeBoton("Descartar cartas");
-        //console.log(mano)
         let totalDescarte = 0;
-        //console.log("cartas seleccionadas", cartasSeleccionadas)
         //Sumar puntos de descarte 
         for(const carta of cartasSeleccionadas){
           totalDescarte+=carta.valorAtaque;
@@ -126,9 +133,6 @@ function App() {
         if (totalDescarte>= puntosADescartar){
           setSuperaDescarte(true);
           setPuntosDescarte(totalDescarte);
-          //for (const carta of cartasJugadas) {
-          //  removeCartaJugada(carta);
-          //}
         } else {
           setPuntosDescarte(totalDescarte);
         }
@@ -150,6 +154,8 @@ function App() {
   useLayoutEffect(() => {
     if(estadoPrincipal==2) {
       console.log("Estado Turno 3")
+      descartarCartasMano();
+      descartarCartasJugadas();
       if (vidaMonstruo==0){
         addCartaFinalMazo(monstruos.pop())
       } else {
@@ -162,8 +168,6 @@ function App() {
       setDefensaMayorAtaqueMonstruo(false);
       setPuntosDescarte(0);
       setMensajeDescartarJugador("")
-      descartarCartasMano();
-      descartarCartasJugadas();
       setEnabledVida(true);
       setEstadoPrincipal(1);
       setEstadoTurnoJugador(0);
@@ -253,8 +257,6 @@ function App() {
         setDefensaJugador(defensaJugador+defensaTotal);
       }
     }
-    //console.log("Cartas por puntos" , cartasPorPuntos)
-    //console.log("Coger ", cartasCoger);
     console.log("Descarte ", cartasDescarte)
     
     setAtaqueJugador(ataqueTotal);
@@ -274,7 +276,6 @@ function App() {
     } 
     //Cogemos cartas del mazo (PODER DIAMANTES)
     if (cartasPorPoder[1]>0 && poderActual!=1){
-      //console.log("Añadir a mano")
       const cartasFaltanMano = 8-mano.length;
       if (cartasCoger <= cartasFaltanMano) {
         addNCartasMano(popLastNMazo(cartasCoger));
@@ -294,30 +295,16 @@ function App() {
     //Paso 0 Turno
     if(estadoTurnoJugador==0){
       const poderMonstruo = monstruos[monstruos.length-1].poder;
-      console.log("poderSinEstado", monstruos[monstruos.length-1])
-      if (poderMonstruo == 'C'){
-        console.log("Comprueba C")
-        setPoderActual(0);
-      }
-      else if (poderMonstruo == 'D'){
-        console.log("Comprueba D")
-        setPoderActual(1);
-      }
-      else if (poderMonstruo == 'T'){
-        console.log("Comprueba T")
-        setPoderActual(2);
-      }
-      else if (poderMonstruo == 'P'){
-        console.log("Comprueba P")
-        setPoderActual(3);
-      } 
+      if (poderMonstruo == 'C')       setPoderActual(0);
+      else if (poderMonstruo == 'D')  setPoderActual(1);
+      else if (poderMonstruo == 'T')  setPoderActual(2);
+      else if (poderMonstruo == 'P')  setPoderActual(3);
+
       setEnabledVida(false);
-      //console.log("Seleccionadas", cartasSeleccionadas)
       for (const carta of cartasSeleccionadas) {
         addCartaJugada(carta);
         removeCartaMano(carta);
       }
-      //console.log("jugadas", cartasJugadas)
       setEstadoTurnoJugador(1); 
     } //DESCARTARSE DE CARTAS Y DESCARTAR LAS CARTAS JUGADAS
     else if (estadoTurnoJugador==2 || estadoTurnoJugador==3){
@@ -333,40 +320,22 @@ function App() {
     
   }
   function resetMano(){
-    //for (const carta of mano){
-    //  removeCartaMano(carta);
-    //}
     addNCartasFinalMazoDescartes(popLastNMano(mano.length))
-    //for (let i=0; i<8; i++){
-    //  aniadirCartaMano(mazo.shift());
-    //}
-    console.log("Mazo: ", mazo.length);
-    //if (getMazo().length>7){
-    //  repartirCartasIniciales();
-    //} else {
-    //  addNCartasMano(getMazo());
-    //}
-    //repartirCartasIniciales();
     mazo.length>7?addNCartasMano(popLastNMazo(8)):addNCartasMano(popLastNMazo(mazo.length));
     setNumeroVidas(numeroVidas-1);
   }
   function nuevaPartida(){
-    console.log("Mano tam",mano.length);
     for(const carta of mano){
       addCartaFinalMazo(carta)
-      console.log("devolver carta mano")
     }
     for(const carta of mazoDescartes){
       addCartaFinalMazo(carta)
-      console.log("devolver carta mazo")
     }
-    //resetMazo();
     resetMonstruos(); 
     resetMazoDescartes(); 
     resetCartasMano(); 
     resetCartasSeleccionadas(); 
     resetCartasJugadas();
-    //reset();
     setMensajeDescartarJugador("");
     setSuperaDescarte(true);
     setMensajeBoton("Jugar cartas");
