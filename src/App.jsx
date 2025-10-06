@@ -77,14 +77,12 @@ function App() {
       else if (monstruos.length>4) setVidaMonstruo(30);
       else setVidaMonstruo(40);
       setEstadoPrincipal(1)
-      console.log(monstruos);
     }
   },[estadoPrincipal])
 
   //estado turno 1 FASE DE APLICAR PODERES Y ATACAR
   useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 1) {
-      console.log("Estado Turno 1")
       pasoPoderYAtaque();
     }
   },[cartasJugadas])
@@ -92,7 +90,6 @@ function App() {
   //estado turno 2 FASE DE ATAQUE DE MONSTRUO Y DESCARTE
   useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 2) {
-      console.log("Estado Turno 2")
       const ataqueMonstruo = monstruos[monstruos.length-1].valorAtaque;
       let puntosADescartar = 0;
       //Es posible cambiar este if por el if-else siguiente?
@@ -151,7 +148,6 @@ function App() {
   //estado turno 3
   useLayoutEffect(() => {
     if(estadoPrincipal==1 && estadoTurnoJugador == 4) {
-      console.log("Estado Turno 3")
       setEnabledVida(true);
       setEstadoTurnoJugador(0);
     }
@@ -160,7 +156,6 @@ function App() {
   //estado turno 4
   useLayoutEffect(() => {
     if(estadoPrincipal==2) {
-      console.log("Estado Turno 3")
       descartarCartasMano();
       descartarCartasJugadas();
       if (vidaMonstruo==0){
@@ -199,7 +194,6 @@ function App() {
   //Paso 1 Turno
   //Ataque al enemigo y aplicar poderes
   function pasoPoderYAtaque(){
-    console.log("PODER ACTUAL ", poderActual)
     //C, D, T, P
     let cartasPorPoder = [0,0,0,0];
     let cartasPorPuntos = [0,0,0,0];
@@ -264,7 +258,6 @@ function App() {
         setDefensaJugador(defensaJugador+defensaTotal);
       }
     }
-    console.log("Descarte ", cartasDescarte)
     
     setAtaqueJugador(ataqueTotal);
     //Quitamos vida al monstruo
