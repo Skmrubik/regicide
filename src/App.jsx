@@ -383,7 +383,7 @@ function App() {
         <p>Ataque: {ataqueJugador}</p>
         <p>Defensa: {defensaJugador}</p>
       </div>
-      <div style={{display: 'flex', flexDirection: 'row'}}>
+      <div style={{position: 'relative', height: '125px', width: '150px'}}>
         {cartasJugadas.map((carta, index) => (
         <CartasMano obj={carta} zindex={index} />
       ))}
@@ -397,10 +397,12 @@ function App() {
           onClick={jugarODescartarCartas} disabled={!superaDescarte}>{mensajeBoton}</button>
         </div>
         <div className='cartas-mano'>
-          <p style={{color: 'white', marginBottom: 40}}>{mensajeDescartarJugador}</p>
-          {mano.map((carta, index) => (
-            <CartasMano obj={carta} zindex={index} />
-          ))}
+          <p style={{color: 'white', marginBottom: 30}}>{mensajeDescartarJugador}</p>
+          <div className='container-cartas'>
+            {mano.map((carta, index) => (
+              <CartasMano obj={carta} zindex={index} />
+            ))}
+          </div>
         </div>
       </div>
     </>

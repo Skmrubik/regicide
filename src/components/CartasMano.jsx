@@ -10,9 +10,6 @@ function CartasMano({obj, zindex}) {
   const estado = useEstado();
   const estadoTurnoJugador = useEstado((state) => state.estadoTurnoJugador);
 
-  //console.log("Estado: ", estado.cartasSeleccionadas);
-  //console.log("Cartas jugadas",estado.cartasJugadas)
-
   useEffect(() => {
     if (estadoTurnoJugador!=0)
       setElegida(0);
@@ -45,8 +42,6 @@ function CartasMano({obj, zindex}) {
           addCartaSeleccionada(obj);
         }
         else if (!hayUnAs && hayUnaIgual && sumaValores+obj.valorAtaque<=10) {
-          //console.log("hay", sumaValores);
-          //console.log("aniadiendo", sumaValores+obj.valorAtaque);
           setElegida(20);
           addCartaSeleccionada(obj);
         }
@@ -59,9 +54,7 @@ function CartasMano({obj, zindex}) {
     }
   }
   return (
-    <>
-    <img className='card' onClick={elegirCarta} src={obj.image} style={{zIndex: zindex, position: 'relative', right: zindex==0?0:40*zindex, bottom: elegida}} />
-    </>
+    <img className='card-mano' onClick={elegirCarta} src={obj.image} style={{ bottom: elegida}} />
   )
 }
 
